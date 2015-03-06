@@ -32,3 +32,38 @@ You have to implement the methods specified in the protocol.
 * **Static Var:** exists only once in our app
 * **@lazy:** Instance is created when the object is first called
 
+
+##Classes 
+Classes are blueprints for objects, that are its instances. 
+
+* An app is a network of objects. 
+* Classes inherit from other classes
+
+**For example:**  
+
+```objc
+@interface ObjectiveCStuff : NSObject
+    
+    //ObjectiveCStuff inherits basic attributes and methods from NSObject
+    
+@end
+```
+
+* If ObjectiveCStuff implements a method already defined in NSObject, it overrides it.
+
+* Calling overriden methods on ObjectiveCStuffChild 
+```objc[self sayHello];```
+
+* Calling parent methods
+```objc[super sayHello];```
+
+* Root classes defines the basic functionality. Such as NSObject.
+* Keep inheritance in mind to know what an object can do.
+
+**For Example:**
+
+1. NSObject: Basic Framework
+2. UIResponder: Responds to taps, shakes, user interactions
+3. UIView: Displays on screen.
+4. UIControl: Behavior of iOS controls.
+5. UIButton
