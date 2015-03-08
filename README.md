@@ -110,3 +110,17 @@ Categories extend the functionality of a class to it and its subclasses.
 - (NSString *)extraMethod { return @”hi”;}
 @end
 ```
+
+##Properties: 
+Hold an object’s values and control access. 
+
+* Property attributes indicate whether it is readonly.
+* All properties start with a value of 0 (or nil in pointers)
+* Initializing them in the header is called lazy instantiation.
+* In swift, properties must be initialized at the creation of object. 
+
+* Properties declared in the header file are public
+                 declared in the implantation are private.
+                 
+                 
+               
