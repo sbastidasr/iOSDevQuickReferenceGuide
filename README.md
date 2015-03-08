@@ -122,5 +122,13 @@ Hold an object’s values and control access.
 * Properties declared in the header file are public
                  declared in the implantation are private.
                  
+**Standard declaration**  By default, properties  are strong and atomic.
+`@property NSString *firstName;`
+
+**Weak reference** Variables you only need as long as someone is also pointing to it. 
+
+* Means a relation in which the object does not own. 
+* The object is deleted if there are no other strong references to it.
+```objc @property (weak) id delegate; ```
                  
                
