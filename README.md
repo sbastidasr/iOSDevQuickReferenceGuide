@@ -95,3 +95,18 @@ XYZPerson.m
 @end
 ```
 
+##Categories: 
+Categories extend the functionality of a class to it and its subclasses.
+
+**For Example:**  Declaring an interface for the original object, with the new name in parentheses
+
+```objc
+@interface ObjectiveCStuff (ObjectiveCStuff_ExtensionThroughCategory)
+- (NSString *)extraMethod; //this method will now be available to all ObjectiveCStuff  and ObjectiveCStuff child instances.
+@end
+```
+```objc
+@implementation ObjectiveCStuff(ObjectiveCStuff_ExtensionThroughCategory)
+- (NSString *)extraMethod { return @”hi”;}
+@end
+```
