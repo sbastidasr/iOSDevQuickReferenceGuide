@@ -67,3 +67,31 @@ Classes are blueprints for objects, that are its instances.
 3. UIView: Displays on screen.
 4. UIControl: Behavior of iOS controls.
 5. UIButton
+
+
+**Interface:** Declares how an object can be used.
+
+**.h file** (header) is the public API of a class (interface). viewable methods and properties of the class
+
+**.m file** (implementation)
+
+\*Classnames should have a 3 letter prefix to avoid duplicates.
+
+**For Example:**
+
+```objc
+XYZPerson.h
+@interface XYZPerson:NSObject
+@property NSString *name;
+@end
+
+XYZPerson.m
+#import “XYZPerson.h”
+@interface XYZPerson()
+	//here go private file declarations. 
+@end
+@implementation  XYZPerson
+-(void) sayHello{}
+@end
+```
+
