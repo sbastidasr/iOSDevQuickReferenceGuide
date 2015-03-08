@@ -130,5 +130,11 @@ Hold an object’s values and control access.
 * Means a relation in which the object does not own. 
 * The object is deleted if there are no other strong references to it.
 ```objc @property (weak) id delegate; ```
+
+**Strong reference** Keep the object until all strong pointers are disconnected. 
+* They own the object and it won't be deleted until the owner is deleted.
+
+**Copy**: Hold on to the value of the object at the point in time when I am assigning it to my property.
+
                  
                
