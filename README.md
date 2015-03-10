@@ -148,5 +148,36 @@ Hold an object’s values and control access.
 * No guarantees about what happens if that same value is accessed simultaneously from different threads.
 * It’s faster to access a nonatomic property than an atomic one
 
-```objc @property(nonatomic) NSString *Name; ```                 
+```objc @property(nonatomic) NSString *Name; ```
+\*Multithreading should not be many threads to an object. It should be model in one, view in other thread and controller in other, talking to each other.
+
+**Synthesize**
+
+```objc @synthesize firstName = ivar_firstName; ``` Makes the \_firstname backing var of the firstName property to be called ivar_firstName.
+
+```objc @synthesize firstName = _firstName; ``` *used only when you declare the properties getters AND setters explicitly, for the firstName property. 
+
+**For Example:** Property, defining own getters and setters.
+
+```objc
+@property NSString *name; //on interface
+@synthesize name = _name;  //on header, lets the compiler know the varname
+```
+
+**Setter method** 
+
+```objc
+- (void) setName:(NSString *)n {
+_name = [n uppercaseString];
+}
+```
+
+**Getter method**
+
+```objc
+- (NSString*) name {
+return _name;
+}
+```
+                 
                
