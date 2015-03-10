@@ -179,5 +179,18 @@ _name = [n uppercaseString];
 return _name;
 }
 ```
+
+
+**Readonly** Doesn’t have a setter.
+
+```objc @property (readonly) NSDate *dateOfBirth; ```
+
+* A property can be declared as readonly in the header and in the implementation, so it has an internal setter.
+
+**Specifying getter name** usually done in booleans.
+
+```objc
+@property(nonatomic, getter=isTaken) BOOL *taken;
+```
                  
                
