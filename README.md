@@ -136,5 +136,17 @@ Hold an object’s values and control access.
 
 **Copy**: Hold on to the value of the object at the point in time when I am assigning it to my property.
 
-                 
+* Otherwise, a mutable string could be assigned to an immutable string property, because mutablestring is a child class
+
+```objc @property (copy)NSString *Name2; ```
+
+**Retain** Hold on to the object 
+* We don't care what its internal values currently are or will be in the future.
+
+**Nonatomic** Not thread safe. 
+* Property attribute specifies synthesized accessors simply to set or return a value directly.
+* No guarantees about what happens if that same value is accessed simultaneously from different threads.
+* It’s faster to access a nonatomic property than an atomic one
+
+```objc @property(nonatomic) NSString *Name; ```                 
                
