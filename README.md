@@ -192,5 +192,13 @@ return _name;
 ```objc
 @property(nonatomic, getter=isTaken) BOOL *taken;
 ```
+
+##Variables
+**Values and collections** are Cocoa objects
+Objective C supports C primitive types
+
+**Int** should be used in loops
+```objc int someInteger=0; ```
+
                  
                
