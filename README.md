@@ -200,5 +200,53 @@ Objective C supports C primitive types
 **Int** should be used in loops
 ```objc int someInteger=0; ```
 
+**NSString** Class used for strings of characters
+
+```objc
+NSString *someString = @"Hello, World!";
+NSNumber *myBOOL = @YES;
+NSNumber *myFloat = @3.14f;
+NSNumber *myInt = @42;
+NSNumber *myInt2 = @(84 / 2);
+```
+
+**NSNumber** is an object, it is slow.  It can wrap different types of numbers
+
+**NSInteger** use this one always. its a platform adaptive type of scalar, especially when passing between functions
+
+**NSUInteger** NSInteger that is only positive.
+
+**Collections**
+
+```objc
+NSArray
+	   @[@"♠︎",@"♣︎",@"♥︎",@"♦︎"];
+```
+
+**NSSet**
+
+**NSDictionary** immutable collection of objects looked by key (hash table) that holds objects strongly
+
+```objc
+@{key:value, key2:value}
+NSDictionary *colors =@{ @“green”:[UIColor greenColor]}
+```
+
+***Methods***
+```objc
+something=colors[@“green”]
+(id)objectForKey:(id)key
+```
+* key is an object and must implement has: and isEqual: NSStrings are good because they hash based on their chars
+//dont rely on NSObject's has and isEqual methods
+
+**looping**
+
+```objc
+for id key in dictionary{
+dictioanary[key].doSomething
+ }
+```
+
                  
                
