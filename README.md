@@ -262,6 +262,26 @@ dictioanary[key].doSomething
 * An object often needs to stay alive longer than the original variable that was created to keep track of it, so an object’s memory is allocated and deallocated dynamically.
 * Variables declared at the top of the file are instance vars, like properties, without accessors.
 
+**Initializing**  
+
+```objc
+NSObject *newObject = [[NSObject alloc] init];
+```
+
+*alloc saves memory for the object and sets memory spaces to zero
+*init makes sure all values are initialized properly.
+
+**Factory method** shorter way, used when no args are needed. 
+
+```objc  
+NSObject *newObject2 = [NSObject new];     
+```
+   
+**Initialize with value**
+```objc
+NSNumber *magicNumber = [[NSNumber alloc] initWithInt:42];  //NSNumber is Immutable
+NSNumber *magicNumber2 = [NSNumber numberWithInt:42]; //factory method. Same but in less code.
+```
 
                  
                
