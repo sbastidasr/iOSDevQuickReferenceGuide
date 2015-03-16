@@ -248,5 +248,20 @@ dictioanary[key].doSomething
  }
 ```
 
+**PropertyList** Collection of collections
+
+* ”Property list” it is a phrase not an object. 
+* Holds NSArray NSDict, NSNum, NSStr, NSDate, NSdata
+* NSarray is PL if its members are PLS => like array of strings.
+* NSDict if both keys+values are PLS.
+* SDK has methods that operate on propertylist 
+  * Example: writeToFile can be sent to an array or dict that contains property list objects.
+
+* A **local variable** is allocated on the **stack**
+* **Objects** are allocated on the heap.
+* An object often needs to stay alive longer than the original variable that was created to keep track of it, so an object’s memory is allocated and deallocated dynamically.
+* Variables declared at the top of the file are instance vars, like properties, without accessors.
+
+
                  
                
