@@ -282,6 +282,15 @@ NSObject *newObject2 = [NSObject new];
 NSNumber *magicNumber = [[NSNumber alloc] initWithInt:42];  //NSNumber is Immutable
 NSNumber *magicNumber2 = [NSNumber numberWithInt:42]; //factory method. Same but in less code.
 ```
+**IMPORTANT**
+* On objective C, values are not changed.
+```objc
+NSString *c = @"a";
+NSString *b =c;  // objects are copied, they don't point to the same object
+c=@"B";  // a NEW string is assigned to b. The last value is not modified, it is discarded.
+NSMutableString *e = @"a"; //Not discarded if object is mutable
+e=@"d"; //original is modified.
+```
 
                  
                
