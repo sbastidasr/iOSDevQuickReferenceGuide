@@ -291,6 +291,32 @@ c=@"B";  // a NEW string is assigned to b. The last value is not modified, it is
 NSMutableString *e = @"a"; //Not discarded if object is mutable
 e=@"d"; //original is modified.
 ```
+###Comparing variables
+
+Comparing integers test if they are equal
+    ```objc
+    if (someInteger == 42) {}
+    ```
+
+Checks if two pointers are pointing at the SAME object, NOT if they have the same value.
+```objc
+    if (myFloat == myInt2) {}
+    ```
+    
+Checks if they have the same value
+```objc
+    if ([myFloat isEqual:myInt2]) {}
+    ```
+    
+Comare if Int is less than myInt2
+```objc
+    if ([myInt compare:myInt2] == NSOrderedAscending) {}
+    ```
+    
+Check if an object is not null
+```objc
+if (myInt) {} // somePerson points to an object
+```
 
                  
                
