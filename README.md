@@ -352,7 +352,41 @@ One arg ```objc [self sayHello]; ```
 Multiple args ```objc [self initWithFirstName:aFirstName lastName:aLastName dateOfBirth:nil]; ```
 
 
+
 ##Looping
+
+* Always use ints in loops instead of NSNumbers. 
+
+**For in** fast enumeration	 	 	 		
+```objc				
+for (Card *card in otherCards) {
+   score += 1;				
+} 
+```
+
+**For**
+
+
+##Init 
+```objc
+-(instanceType)init{}
+```
+
+* instanceType: Because it is inherited from NSObject.
+* Returns an object that is of the same type of the class it was called in. 
+* Always initialize parent classes with :
+
+```objc
+self=[super init];
+if(self){
+	//continue initializing
+}
+return self;
+```
+
+Example: Initialize a PlayingCardDeck by iterating the valid cards from PlayingCard adding cards to itself if class is a deck. 
+
+
 
 
                  
