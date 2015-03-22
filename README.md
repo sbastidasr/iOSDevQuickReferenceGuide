@@ -318,5 +318,42 @@ Check if an object is not null
 if (myInt) {} // somePerson points to an object
 ```
 
+##Methods
+Objects send messages by calling methods on an object.
+
+```objc
+-(void)someMethodWithFirstValue:(type *)value1 secondValue:(type2 *)value2;
+```
+- (ReturnType)MethodNameWithFirstValue:(Arg1Type)arg secondValue(Arg2Type)arg2;
+ 
+* Method Name is: someMethodWithFirstValue:secondValue:
+* value1 and value2 are the names used in the implementation to access the values supplied when the method is called, as if they were variables.
+
+* (-) **Instance** method. It can be called on any instance.
+* (+) **Class method** Normally these are Utilities and initializers.
+
+* Instance Methods are used for:
+ * Creating an object:
+
+```objc 
++(void)person{}
+```
+
+  * Utilities: Eg: Returning max value class can get. 
+
+**Public** methods are declared in the public interface and so can be seen and called by other objects. Their corresponding implementation resides in the implementation file and can’t be seen by other objects. 
+
+**Private** methods have only an implementation and are internal to the class, meaning they’re only available to call inside the class implementation
+
+* There aren’t optional arguments on Objective-C.
+
+**Calling methods**
+One arg ```objc [self sayHello]; ```
+Multiple args ```objc [self initWithFirstName:aFirstName lastName:aLastName dateOfBirth:nil]; ```
+
+
+##Looping
+
+
                  
                
