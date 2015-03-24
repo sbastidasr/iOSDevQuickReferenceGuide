@@ -68,7 +68,6 @@ Classes are blueprints for objects, that are its instances.
 4. UIControl: Behavior of iOS controls.
 5. UIButton
 
-
 **Interface:** Declares how an object can be used.
 
 **.h file** (header) is the public API of a class (interface). viewable methods and properties of the class
@@ -94,6 +93,7 @@ XYZPerson.m
 -(void) sayHello{}
 @end
 ```
+
 
 ##Categories: 
 Categories extend the functionality of a class to it and its subclasses.
@@ -121,7 +121,7 @@ Hold an object’s values and control access.
 
 * Properties declared in the header file are public
                  declared in the implantation are private.
-                 
+
 **Standard declaration**  By default, properties  are strong and atomic.
 `@property NSString *firstName;`
 
@@ -149,6 +149,7 @@ Hold an object’s values and control access.
 * It’s faster to access a nonatomic property than an atomic one
 
 ```objc @property(nonatomic) NSString *Name; ```
+
 \*Multithreading should not be many threads to an object. It should be model in one, view in other thread and controller in other, talking to each other.
 
 **Synthesize**
@@ -180,7 +181,6 @@ return _name;
 }
 ```
 
-
 **Readonly** Doesn’t have a setter.
 
 ```objc @property (readonly) NSDate *dateOfBirth; ```
@@ -193,12 +193,16 @@ return _name;
 @property(nonatomic, getter=isTaken) BOOL *taken;
 ```
 
+
+
 ##Variables
 **Values and collections** are Cocoa objects
 Objective C supports C primitive types
 
 **Int** should be used in loops
 ```objc int someInteger=0; ```
+
+###Values
 
 **NSString** Class used for strings of characters
 
@@ -282,6 +286,7 @@ NSObject *newObject2 = [NSObject new];
 NSNumber *magicNumber = [[NSNumber alloc] initWithInt:42];  //NSNumber is Immutable
 NSNumber *magicNumber2 = [NSNumber numberWithInt:42]; //factory method. Same but in less code.
 ```
+
 **IMPORTANT**
 * On objective C, values are not changed.
 ```objc
@@ -291,6 +296,7 @@ c=@"B";  // a NEW string is assigned to b. The last value is not modified, it is
 NSMutableString *e = @"a"; //Not discarded if object is mutable
 e=@"d"; //original is modified.
 ```
+
 ###Comparing variables
 
 Comparing integers test if they are equal
@@ -317,7 +323,8 @@ Check if an object is not null
 ```objc
 if (myInt) {} // somePerson points to an object
 ```
-
+    
+    
 ##Methods
 Objects send messages by calling methods on an object.
 
@@ -350,7 +357,6 @@ Objects send messages by calling methods on an object.
 **Calling methods**
 One arg ```objc [self sayHello]; ```
 Multiple args ```objc [self initWithFirstName:aFirstName lastName:aLastName dateOfBirth:nil]; ```
-
 
 
 ##Looping
@@ -1676,9 +1682,3 @@ Like. class CameraController has a UIImagePickerController property.
 the delegate for that is self. 
 so cameracontroller implements UIImagepickerCOntroller methods
  
-
-
-
-
-                 
-               
