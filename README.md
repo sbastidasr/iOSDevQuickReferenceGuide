@@ -1609,6 +1609,366 @@ Collision mode determines if items bounce off eachother or only bounds**UIAtta
 ```objc   @property (copy) void (^action)(void);```
 ￼(i.e. it’s called action, it takes no arguments and returns nothing) You can set this to do anything you want.But it will be called a lot, so make it very efficient.If the action refers to properties in the behavior itself, watch out for memory cycles
 
+##Multithreading 
+dividing execution in many paths, possibly running at the same time.
+
+* Main thread of the app is the one that interacts with the user. Should be very responsive.
+
+###Queues
+Blocks of code waiting for execution. Possible in many threads. You dont know.
+
+**Main Queue:** All Ui activity. Non UI time consuming processes shouldnt be her
+
+Queues can be: 
+* Serial (one finishes, the next goes in). 
+* Concurrent: All at the same time. 
+
+**Executing a block on another queue**  C functions. Object wrapper is NSOperationQueue
+dispatch_queue_t queue= ...;   //declare a queue
+dispatch_asyng(queue, ^{ });   // the queue you want to put the block in.
+
+**Getting the main queue**
+dispatch_queue_t mainQ = dispatch_get_main_queue();
+NSOperationQueue *mainQ = [NSOperationQUeue mainQueue]; //for object oriented apis.
+
+**Creating a queue** (not the main one) For comlex calculations, images etc. 
+dispatch_queue_t otherQ = dispatch_queue_create("name", NULL);  Null is serial. Other option is concurrent
+
+***Easy mode*** Invoking a method on the main qeue
+-(void)performSelectorOnMainThread:(SEL)method 
+```objc
+  - (void)performSelectorOnMainThread:(SEL)aMethod           //selector                           withObject:(id)obj                //object arg							waitUntilDone:(BOOL)waitUntilDone;    //Usually we dont wait to continue with this 
+```
+```objc
+dispatch_async(dispatch_get_main_queue(), ^{ /* call aMethod */ });```
+####Example For API
+Downloads the URL in a separate thread and gives you the addres to the file where it downloaded.
+```objc
+  NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL urlWithString:@“http://...”]];  NSURLConfiguration *configuration = ...;  NSURLSession *session = ...;			//manages time session online. Determines which thread it runs in.   NSURLSessionDownloadTask *task; 		//session, create a task to download URL  task = [session downloadTaskWithRequest:request                        completionHandler:^(NSURL *localfile, NSURLResponse *response, NSError *error) {  //
+                        //file url, where it downloaded stuff.							￼/* want to do UI things here, can I? */ 
+							}];[task resume];
+```
+####Example URL get on main queue
+```objc
+
+ NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration                                                        delegate:nil                                                   delegateQueue:[NSOperationQueue mainQueue]];  NSURLSessionDownloadTask *task;  task = [session downloadTaskWithRequest:request                        completionHandler:^(NSURL *localfile, NSURLResponse *response, NSErr or *error) {/* You can do things directly because this is called on the main queue */ }];  [task resume];
+  ```
+
+####Example outside the main queue
+  ```objc
+
+  NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration]; // no delegateQueue  NSURLSessionDownloadTask *task;  task = [session downloadTaskWithRequest:request                        completionHandler:^(NSURL *localfile, NSURLResponse *response, NSError *error) {      dispatch_async(dispatch_get_main_queue(), ^{ /* do UI things */ });      or [self performSelectorOnMainThread:@selector(doUIthings) withObject:nil waitUntilDone:NO];  }];  [task resume];
+  ```
+
+  
+##UIScrollView
+ All of the subviews’ frames will be in the UIScrollView’s content area’s coordinate system!￼￼(that is, (0,0) in the upper left & width and height of contentSize.width & .height).!
+
+**Adding Subviews to view**
+subview.frame = ...;[view addSubview:subview];
+  
+**Adding Subviews to UIScrollView**
+scrollView.contentSize = CGSizeMake(3000, 2000);    //sets the size of the scrollable area.
+subview1.frame = CGRectMake(2700, 100, 120, 180);   //sets where the subview is in the scrollable area[view addSubview:subview1];
+
+**Where the scrollview is looking**
+CGPoint upperLeftOfVisible = scrollView.contentOffset;
+
+**Visible area of UIScrollView**
+scrollView.bounds
+*In subiew's coordinates* CGRect visibleRect = [scrollView convertRect:scrollView.bounds toView:subview];
+
+
+**For Example**
+```objc
+UIImage *image = [UIImage imageNamed:@“bigimage.jpg”]; UIImageView *iv = [[UIImageView alloc] initWithImage:image]; 
+[scrollView addSubview:iv];//Set the scrollable area size
+scrollView.contentSize = imageView.bounds.size
+```
+     
+**Scrolling programmatically**- (void)scrollRectToVisible:(CGRect)aRect animated:(BOOL)animated; 
+
+###Zooming* All UIView’s have a property (transform) which is an affine transform (translate, scale, rotate). 
+* Scroll modifies this when zooming.
+* Zooming also affects the scroll view’s contentSize and contentOffset.
+**Required: Setting max and min scale** 
+scrollView.minimumZoomScale = 0.5; // 0.5 means half its normal size 
+scrollView.maximumZoomScale = 2.0; // 2.0 means twice its normal size
+**Required: delegate to specify view** (or views) to zoom
+￼￼￼  - (UIView *)viewForZoomingInScrollView:(UIScrollView *)sender;
+
+**Zooming programatically**@property (nonatomic) float zoomScale; !- (void)setZoomScale:(float)scale animated:(BOOL)animated; 
+- (void)zoomToRect:(CGRect)zoomRect animated:(BOOL)animated;
+
+**Delegate Methods**
+- (void)scrollViewDidEndZooming:(UIScrollView *)senderwithView:(UIView *)zoomView // from delegate method above atScale:(CGFloat)scale;
+
+
+##UITableView
+
+* Static/Dynamic One-dimensional Table
+* Subclass of UIView
+* Can be grouped or plain  (Grouped like settings table, big spaces between cells of dif groups)
+* Can have sections(like country names above cities)
+* Header: @property UIView *tableFooterView;
+* Footer: @property UIView *tableHeaderView;
+* Section Header UITableViewDataSource’s tableView:titleForHeaderInSection:
+* Section Footer UITableViewDataSource’s tableView:titleForFooterInSection:
+
+**Cell Content!** UITableViewDataSource -> tableView:cellForRowAtIndexPath:
+* Subtitle: ￼￼￼￼￼UITableViewCellStyleSubtitle
+* Basic: UITableViewCellStyleDefault
+* Right Detail: UITableViewCellStyleValue1
+* Left Detail: UITableViewCellStyleValue2
+
+* Each row is a UITableViewCell
+	* Can be wired to a subclass that contains outlets for customized cell. 
+	
+###Data Souce
+Provides the data what is displayed inside the cells.
+*How many sections in the table*
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)sender; !*How many rows in each section*- (NSInteger)tableView:(UITableView *)sender numberOfRowsInSection:(NSInteger)section; 
+*Give me a UITableViewCell to use to draw each cell at a given row in a given section.*
+ - (UITableViewCell *)tableView:(UITableView *)sender            cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+	UITableViewCell *cell;	cell = [self.tableView dequeueReusableCellWithIdentifier:@“Flickr Photo Cell”                                            forIndexPath:indexPath];	cell.textLabel.text = [self getMyTitleForRow:indexPath.row inSection:indexPath.section];      return cell;
+ }
+**Do not implement dataSource methods for a static table.**
+
+##UITableViewDelegate
+Controls how the table is displayed.
+Lets you observe what the table is doing.
+
+*UITableViewDelegate method sent when row is selected* (Table view target/action)
+(only needed if not segueing)
+- (void)tableView:(UITableView *)sender didSelectRowAtIndexPath:(NSIndexPath *)path ! {!￼// go do something based on information about my Model! // corresponding to indexPath.row in indexPath.section}
+
+*clicking the accesory button on a cell*
+- (void)tableView:(UITableView *)sender￼￼{// Do something related to the row at indexPath,// but not the primary action associated with touching the row
+}
+
+*Other Delegates*
+
+* will/did methods for both selecting and deselecting rows.!Providing UIView objects to draw section headers and footers.! Handling editing rows (moving them around with touch gestures).! willBegin/didEnd notifications for editing (i.e. removing/moving) rows.! Copying/pasting rows.
+
+* Reload data if model changes - (void)reloadData; 
+
+###Segues in tables
+The sender of prepareForSegue:sender: is the UITableViewCell
+ Use the important method indexPathForCell: to find out the indexPath of the row that’s segueing.! 
+ 
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{￼￼    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];// prepare segue.destinationController to display based on information// about my Model corresponding to indexPath.row in indexPath.section 
+}
+
+
+##UISplitViewController
+
+* Master -> Detail view Controller
+* Top level of storyboard. Do not place inside a nav or tab bar controller. (You can put those inside)
+* Ctrl-drag to each of the two sides (Master and Detail) of the split view.
+* All UIViewControllers know the UISplitViewController they are contained in (if in one): ```objc if (self.splitViewController) ```
+
+The UISplitViewController has a property which is an array containing Master and Detail:
+```objc @property (copy) NSArray *viewControllers; // index 0 is Master, 1 is Detail ```
+UISplitViewController requires its delegate to be set!Or, at least, if you don’t set it, then in portrait mode, the Master will be inaccessible.! 
+```objc @property (assign) id <UISplitViewControllerDelegate> delegate; ```
+* You must set this delegate very early -> Probably in awakeFromNib.
+
+Never hide the left side (Master) behind a bar button```objc - (BOOL)splitViewController:(UISplitViewController *)sender shouldHideViewController:(UIViewController *)master                 inOrientation:(UIInterfaceOrientation)orientation{return NO; // never hide it}```
+
+Hide Master in portrait orientation only (the default)
+```objc- (BOOL)splitViewController:(UISplitViewController *)sender shouldHideViewController:(UIViewController *)master                  inOrientation:(UIInterfaceOrientation)orientation    {        return UIInterfaceOrientationIsPortrait(orientation);￼}```
+
+Split View helps you by providing that bar button This gets called in your delegate when the master gets hidden.```objc￼- (void)splitViewController:(UISplitViewController *)sender     willHideViewController:(UIViewController *)master          withBarButtonItem:(UIBarButtonItem *)barButtonItem       forPopoverController:(UIPopoverController *)popover{barButtonItem.title = master.title;// this next line would only work in the Detail// and only if it was in a UINavigationController self.navigationItem.leftBarButton = barButtonItem;}
+```
+
+When it's time for the bar button to go away:
+This gets called in your delegate when the master reappears
+```objc    - (void)splitViewController:(UISplitViewController *)sender         willShowViewController:(UIViewController *)master      invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem    {// this next line would only work in the Detail// and only if it was in a UINavigationController self.navigationItem.leftBarButton = nil;}
+```
+
+####Updating the Detail when the Master is touched
+There are 2 choices for how to do this: Target/Action or Replace Segue**Target/Action**Example (code in the Master view controller) ...```objc  - (IBAction)doit  {      id detailViewController = self.splitViewController.viewControllers[1];[detailViewController setSomeProperty:...]; // might want some Introspection first 
+}```**Replace Segue** 
+Entirely replaces the Detail view controller.
+*Remember, segues always instantiate a view controller (split view stops pointing to old one).*Can Replace either side, but much more common to replace the right side (since it’s the “detail”).! 
+*Be careful! You might lose the UIBarButtonItem used for revealing the hidden Master*
+
+###Popovers!
+UIPopoverController is not a UIViewController 
+Instead it has a @property that holds the UIViewController that is inside it 
+```objc @property (nonatomic, strong) UIViewController *contentViewController;  ```objc 
+This is usually wired up in a storyboard.
+
+####Creating a Popover Segue in your Storyboard####Just drag from the UI element you want to cause the popover to the scene you want to pop up.* In your prepareForSegue:sender:, the argument will be isKindOf:UIStoryboardPopoverSegue.And UIStoryboardPopoverSegue has a @property you can use to get the UIPopoverController:```objc ￼- (UIPopoverController *)popoverController;``````objc - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{    if ([segue isKindOfClass:[UIStoryboardPopoverSegue class]]) {        UIPopoverController *popoverController =            ((UIStoryboardPopoverSegue *)segue).popoverController;...} }￼```
+
+####Presenting a popover from code####Popover has a little arrow that points to what (rectangle or button) brought it up.!You can specify which directions it is valid to point (and thus where the popover will pop up).! 
+```objc  UIPopoverController *popover =[[UIPopoverController alloc] initWithContentViewController:myPoppedUpVC];[popover presentPopoverFromRect:(CGRect)aRect // little arrow points to aRect in view‘s coords                           inView:(UIView *)view         permittedArrowDirections:(UIPopoverArrowDirection)direction                         animated:(BOOL)flag]; ```... or (points to a bar button item) ...!  ```objc [popover presentPopoverFromBarButtonItem:(UIBarButtonItem *)barButtonItem                  permittedArrowDirections:(UIPopoverArrowDirection)direction                                  animated:(BOOL)flag;```
+Don’t forget to keep a strong pointer to the popover controller!! 
+
+Example: a target/action method attached to a UIBarButtonItem that presents a popover ...!```objc - (IBAction)presentPopover:(UIBarButtonItem *)item{      if (!self.popover) {          self.popover = [[UIPopoverController alloc] initWithViewController:vc];          [self.popover presentPopoverFromBarButtonItem:item ...];} }
+```
+
+* The user dismisses a popover by touching outside of it!
+* ￼Dismissing a popover from code! UIPopoverController method: ```objc - (void)dismissPopoverAnimated:(BOOL)animated; ```* Finding out that the user dismissed the popover! UIPopoverController has a delegate too and it will be sent this message:```objc - (void)popoverControllerDidDismissPopover:(UIPopoverController *)sender;  ```
+
+
+##DOCUMENTS + CORE DATA
+	
+* Storing in an object oriented DB.
+* It's a way of creating objects linked (mapped) to a DB. Usually SQL, can also be XML or Memory.
+
+1) Create a visual mapping between db and objects.
+File > Core Data > Data Model    (like a storyboard of a model)
+
+**Entities** any objects. They map to objects
+**Attributes** Object's attributes
+**Relationships** pointers to other objects. Of type Managed Object. 
+**Fetch Properties** Calculaded way to have pointers to other properties. 
+
+####Create a Core Data object
+1. Add Entity E.g. "Photos"
+3. Add Attributes like type, title
+4. View in graphical mode by switching editor style
+4. Control+Drag Relationships. set To many/to one
+
+
+| Photo    |         | Photographer  |
+| -------- |:-------:| -------------:|
+| photoURL | 	        | name         |
+| title    |         |               |
+| whoTook  |   <->   |    photos      |
+
+ * Who took is an NSManagedObject.
+ * Photographer has one to many photos. NSSet of Photos.
+ * Delete rules -> What to do for who tool if I delete a photographer.
+   * Nullify: set to nil
+   * Cascade: Delete pointed
+   
+###How to access this on code?
+With an NSManagedObjectContext: a hook to do stuff on the dataBase.
+
+How to get it? 2 ways:
+1. Create a UIManaged Document, ask for its ManagedObjectContext
+2. Click "Click Use Core Data" When creating a project. App delegate will have a context.
+
+###UIManagedDocument:UiDocument
+
+* UiDocument: is a Mechanism fot managing a store
+* UIManagedDocument: puts a database in a strage => contains your core database. Create it and grab its managed obj context.
+* Easier to connect with iCloud
+* completition handler: code on the main queue, call [document is ready]
+* check its state = normal, closed, error, disabled, conflict.
+  * Conflict may be another device that changed the doc on iCloud.
+* UiManagedDoc is autosaved
+* Autoclosed also if you don't have pointers to it.
+* Also sync with completition managers.
+
+###Creating a UIManagedDocument
+```objcNSFileManager *fileManager = [NSFileManager defaultManager];NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory ￼￼inDomains:NSUserDomainMask]firstObject];
+NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];UIManagedDocument *document = [[UIManagedDocument alloc] initWithFileURL:url];
+```This creates the UIManagedDocument instance, but does not open nor create the underlying file.
+
+###open or create a UIManagedDocument* Check to see if the UIManagedDocument’s underlying file exists on disk ...  * if it does, open the document:  * if it does not, create the documentL**CompletionHander**: a block of code to execute when the open/save completes.!That’s needed because the open/save is asynchronous (i.e. happens on its own queue).! Do not ignore this fact!
+￼**Example**```objc
+￼self.document = [[UIManagedDocument alloc] initWithFileURL:(URL *)url];if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {    [document openWithCompletionHandler:^(BOOL success) {        if (success) [self documentIsReady];        if (!success) NSLog(@“couldn’t open document at %@”, url);}]; } else {    [document saveToURL:url forSaveOperation:UIDocumentSaveForCreating      completionHandler:^(BOOL success) {        if (success) [self documentIsReady];        if (!success) NSLog(@“couldn’t create document at %@”, url);    }];}
+```
+*Cant do anything with the document yet(do it in documentIsReady)
+
+Once document is open/created, you can start using it
+But you might want to check the documentState when you do Now you can get a managedObjectContext from it and use it to do Core Data stuff
+```objc - (void)documentIsReady {if (self.document.documentState == UIDocumentStateNormal) { // start using document
+ NSManagedObjectContext *context = self.document.managedObjectContext; 
+ // start doing Core Data stuff with context} }
+```
+**Other documentStates*** UIDocumentStateClosed (you haven’t done the open or create yet)
+* UIDocumentStateSavingError (success will be NO in completion handler)
+* UIDocumentStateEditingDisabled (temporary situation, try again)
+* UIDocumentStateInConflict (e.g., because some other device changed it via iCloud)
+
+###Saving the document* UIManagedDocuments AUTOSAVE themselves
+* If, for some reason you wanted to manually save (asynchronous!) 
+* ```objc [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForOverwritingcompetionHandler:^(BOOL success) { /* block to execute when save is done */ }]; ```
+* Note that this is almost identical to creation (just UIDocumentSaveForOverwriting is different).! 
+* This is a UIKit class and so this method must be called on the main queue.###Closing the document* Will automatically close if there are no strong pointers left to it.
+* But you can explicitly close with (asynchronous!) 
+```objc [self.document closeWithCompletionHandler:^(BOOL success) {if (!success) NSLog(@“failed to close document %@”, self.document.localizedName); }]; !UIManagedDocument’s localizedName method ...@property (strong) NSString *localizedName; // suitable for UI (but only valid once saved)
+```
+
+###Multiple instances of UIManagedDocument on the same document* They will not share an NSManagedObjectContext
+* changes in one will not automatically be reflected in the other.* You’ll have to refetch in other UIManagedDocuments after you make a change in one.￼￼￼* Conflicting changes in two different UIManagedDocuments would have to be resolved by you
+* But a single writer and multiple readers? Less rare. But you need to know when to refetch.
+* You can watch (via “radio station”) other documents’ managedObjectContexts (then refetch).
+
+***Better to use a single UIManagedDocument instance (per actually document) throughout.***
+
+
+###listening to changes on the DB: NSNotification
+
+* Add obsercer to controller: NSManagedObjectContextDidSaveNotification.
+* GIves you an array of chandes stuff.
+* **If you have many contexts** Call merge changes from cntext did save notification.
+
+**Listening in UIViewController**
+```objc
+ - (void)viewDidAppear:(BOOL)animated {     [super viewDidAppear:animated];     [center addObserver:self                selector:@selector(contextChanged:)                    name:NSManagedObjectContextDidSaveNotificationobject:document.managedObjectContext]; //don’t passnilhere! } - (void)viewWillDisappear:(BOOL)animated {     [center removeObserver:self                       name:NSManagedObjectContextDidSaveNotification                     object:document.managedObjectContext];     [super viewWillDisappear:animated]; }
+ ```
+###Inserting an object
+ ```objc NSManagedObjectContext *context = aDocument.managedObjectContext; NSManagedObject *photo =    [NSEntityDescription insertNewObjectForEntityForName:@“Photo”                                  inManagedObjectContext:context]; ```
+retirns an NSManagedObject instance -> blank but it could be set to defaults.
+
+Setting attributes: (Key-Value coding protocol)
+
+* valueForKey/setValueForKey
+* valueForKeyPath/setValueForKeyPath (NBNKBKJBKJ)
+* returns id and has literal strings
+* The key is the attrubute name like @"thumbnailURL"
+* value is whatever stored in the db: NSNumber, BinaryData, NSData, NSDate etc.
+* **TO MANY** relationships -> NSSetObjects
+* **TO ONE** relationships -> NSManagedObjects
+
+Example: setting a "photographer" value on a photo also adds the photo to the "Photographer's photos".
+
+* Changes are not stored until autosave happens!!
+
+###Inserting an Object (No value/key)
+
+* It has properties! 
+* Subclass NSManageObjects for Photo and Photographer, which has properties stored in the DB.
+
+**XCode generates this** 
+
+* Select Entities in the .xcdatamodel > Editor > Create NSManagedObjectSubclass.
+* Checking use scalar properyies will give int instead of NSNumber and NSTimeInterval isntead of NSDate.
+* Inserting or retreiving an object is now of type (PHotographer *)
+* Photographer is subchild of NSMAnagedObject
+* It now has all the properties
+* It now has methods: 
+  * addPhotos, removePhotos, (Many)
+  * addPhotoObject, RemovePhotoObject(One)
+* Even Whotook is in the class. 
+* Implementation of these properties is @dynamic. 
+
+
+
+
+
+
+
+
+
+```objc 
+/Users/sbastidasr/Pictures/Photo Booth Library/Pictures/Photo on 9-30-14 at 11.16 AM.jpg
+
+
+FALTA 11 Table view and IPAd
+12 documents and core data
+
+add images to look like g drive
+
+```objc
+
+
+
 
 
 
