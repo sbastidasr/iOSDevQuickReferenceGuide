@@ -1607,7 +1607,7 @@ Collision mode determines if items bounce off eachother or only bounds**UIAtta
 **UIDynamicBehavior’s action property**Every time the behavior is applied, the block set with this UIDynamicBehavior property is called.
 **For Example** gravity.action= {block of code}.   Every time gravity moves the object a bit, action is executed.
 ```objc   @property (copy) void (^action)(void);```
-￼(i.e. it’s called action, it takes no arguments and returns nothing) You can set this to do anything you want.But it will be called a lot, so make it very efficient.If the action refers to properties in the behavior itself, watch out for memory cycles
+(i.e. it’s called action, it takes no arguments and returns nothing) You can set this to do anything you want.But it will be called a lot, so make it very efficient.If the action refers to properties in the behavior itself, watch out for memory cycles
 
 ##Multithreading 
 dividing execution in many paths, possibly running at the same time.
@@ -1645,7 +1645,7 @@ dispatch_async(dispatch_get_main_queue(), ^{ /* call aMethod */ });```
 Downloads the URL in a separate thread and gives you the addres to the file where it downloaded.
 ```objc
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL urlWithString:@“http://...”]];  NSURLConfiguration *configuration = ...;  NSURLSession *session = ...;			//manages time session online. Determines which thread it runs in.   NSURLSessionDownloadTask *task; 		//session, create a task to download URL  task = [session downloadTaskWithRequest:request                        completionHandler:^(NSURL *localfile, NSURLResponse *response, NSError *error) {  //
-                        //file url, where it downloaded stuff.							￼/* want to do UI things here, can I? */ 
+                        //file url, where it downloaded stuff.							/* want to do UI things here, can I? */ 
 							}];[task resume];
 ```
 ####Example URL get on main queue
@@ -1662,7 +1662,7 @@ Downloads the URL in a separate thread and gives you the addres to the file wher
 
   
 ##UIScrollView
- All of the subviews’ frames will be in the UIScrollView’s content area’s coordinate system!￼￼(that is, (0,0) in the upper left & width and height of contentSize.width & .height).!
+ All of the subviews’ frames will be in the UIScrollView’s content area’s coordinate system!(that is, (0,0) in the upper left & width and height of contentSize.width & .height).!
 
 **Adding Subviews to view**
 subview.frame = ...;[view addSubview:subview];
@@ -1695,7 +1695,7 @@ scrollView.contentSize = imageView.bounds.size
 scrollView.minimumZoomScale = 0.5; // 0.5 means half its normal size 
 scrollView.maximumZoomScale = 2.0; // 2.0 means twice its normal size
 **Required: delegate to specify view** (or views) to zoom
-￼￼￼  - (UIView *)viewForZoomingInScrollView:(UIScrollView *)sender;
+  - (UIView *)viewForZoomingInScrollView:(UIScrollView *)sender;
 
 **Zooming programatically**@property (nonatomic) float zoomScale; !- (void)setZoomScale:(float)scale animated:(BOOL)animated; 
 - (void)zoomToRect:(CGRect)zoomRect animated:(BOOL)animated;
@@ -1716,7 +1716,7 @@ scrollView.maximumZoomScale = 2.0; // 2.0 means twice its normal size
 * Section Footer UITableViewDataSource’s tableView:titleForFooterInSection:
 
 **Cell Content!** UITableViewDataSource -> tableView:cellForRowAtIndexPath:
-* Subtitle: ￼￼￼￼￼UITableViewCellStyleSubtitle
+* Subtitle: UITableViewCellStyleSubtitle
 * Basic: UITableViewCellStyleDefault
 * Right Detail: UITableViewCellStyleValue1
 * Left Detail: UITableViewCellStyleValue2
@@ -1740,10 +1740,10 @@ Lets you observe what the table is doing.
 
 *UITableViewDelegate method sent when row is selected* (Table view target/action)
 (only needed if not segueing)
-- (void)tableView:(UITableView *)sender didSelectRowAtIndexPath:(NSIndexPath *)path ! {!￼// go do something based on information about my Model! // corresponding to indexPath.row in indexPath.section}
+- (void)tableView:(UITableView *)sender didSelectRowAtIndexPath:(NSIndexPath *)path ! {!// go do something based on information about my Model! // corresponding to indexPath.row in indexPath.section}
 
 *clicking the accesory button on a cell*
-- (void)tableView:(UITableView *)sender￼￼{// Do something related to the row at indexPath,// but not the primary action associated with touching the row
+- (void)tableView:(UITableView *)sender{// Do something related to the row at indexPath,// but not the primary action associated with touching the row
 }
 
 *Other Delegates*
@@ -1756,7 +1756,7 @@ Lets you observe what the table is doing.
 The sender of prepareForSegue:sender: is the UITableViewCell
  Use the important method indexPathForCell: to find out the indexPath of the row that’s segueing.! 
  
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{￼￼    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];// prepare segue.destinationController to display based on information// about my Model corresponding to indexPath.row in indexPath.section 
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];// prepare segue.destinationController to display based on information// about my Model corresponding to indexPath.row in indexPath.section 
 }
 
 
@@ -1776,9 +1776,9 @@ The UISplitViewController has a property which is an array containing Master and
 Never hide the left side (Master) behind a bar button```objc - (BOOL)splitViewController:(UISplitViewController *)sender shouldHideViewController:(UIViewController *)master                 inOrientation:(UIInterfaceOrientation)orientation{return NO; // never hide it}```
 
 Hide Master in portrait orientation only (the default)
-```objc- (BOOL)splitViewController:(UISplitViewController *)sender shouldHideViewController:(UIViewController *)master                  inOrientation:(UIInterfaceOrientation)orientation    {        return UIInterfaceOrientationIsPortrait(orientation);￼}```
+```objc- (BOOL)splitViewController:(UISplitViewController *)sender shouldHideViewController:(UIViewController *)master                  inOrientation:(UIInterfaceOrientation)orientation    {        return UIInterfaceOrientationIsPortrait(orientation);}```
 
-Split View helps you by providing that bar button This gets called in your delegate when the master gets hidden.```objc￼- (void)splitViewController:(UISplitViewController *)sender     willHideViewController:(UIViewController *)master          withBarButtonItem:(UIBarButtonItem *)barButtonItem       forPopoverController:(UIPopoverController *)popover{barButtonItem.title = master.title;// this next line would only work in the Detail// and only if it was in a UINavigationController self.navigationItem.leftBarButton = barButtonItem;}
+Split View helps you by providing that bar button This gets called in your delegate when the master gets hidden.```objc- (void)splitViewController:(UISplitViewController *)sender     willHideViewController:(UIViewController *)master          withBarButtonItem:(UIBarButtonItem *)barButtonItem       forPopoverController:(UIPopoverController *)popover{barButtonItem.title = master.title;// this next line would only work in the Detail// and only if it was in a UINavigationController self.navigationItem.leftBarButton = barButtonItem;}
 ```
 
 When it's time for the bar button to go away:
@@ -1799,7 +1799,7 @@ Instead it has a @property that holds the UIViewController that is inside it
 ```objc @property (nonatomic, strong) UIViewController *contentViewController;  ```objc 
 This is usually wired up in a storyboard.
 
-####Creating a Popover Segue in your Storyboard####Just drag from the UI element you want to cause the popover to the scene you want to pop up.* In your prepareForSegue:sender:, the argument will be isKindOf:UIStoryboardPopoverSegue.And UIStoryboardPopoverSegue has a @property you can use to get the UIPopoverController:```objc ￼- (UIPopoverController *)popoverController;``````objc - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{    if ([segue isKindOfClass:[UIStoryboardPopoverSegue class]]) {        UIPopoverController *popoverController =            ((UIStoryboardPopoverSegue *)segue).popoverController;...} }￼```
+####Creating a Popover Segue in your Storyboard####Just drag from the UI element you want to cause the popover to the scene you want to pop up.* In your prepareForSegue:sender:, the argument will be isKindOf:UIStoryboardPopoverSegue.And UIStoryboardPopoverSegue has a @property you can use to get the UIPopoverController:```objc - (UIPopoverController *)popoverController;``````objc - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{    if ([segue isKindOfClass:[UIStoryboardPopoverSegue class]]) {        UIPopoverController *popoverController =            ((UIStoryboardPopoverSegue *)segue).popoverController;...} }```
 
 ####Presenting a popover from code####Popover has a little arrow that points to what (rectangle or button) brought it up.!You can specify which directions it is valid to point (and thus where the popover will pop up).! 
 ```objc  UIPopoverController *popover =[[UIPopoverController alloc] initWithContentViewController:myPoppedUpVC];[popover presentPopoverFromRect:(CGRect)aRect // little arrow points to aRect in view‘s coords                           inView:(UIView *)view         permittedArrowDirections:(UIPopoverArrowDirection)direction                         animated:(BOOL)flag]; ```... or (points to a bar button item) ...!  ```objc [popover presentPopoverFromBarButtonItem:(UIBarButtonItem *)barButtonItem                  permittedArrowDirections:(UIPopoverArrowDirection)direction                                  animated:(BOOL)flag;```
@@ -1809,7 +1809,7 @@ Example: a target/action method attached to a UIBarButtonItem that presents a po
 ```
 
 * The user dismisses a popover by touching outside of it!
-* ￼Dismissing a popover from code! UIPopoverController method: ```objc - (void)dismissPopoverAnimated:(BOOL)animated; ```* Finding out that the user dismissed the popover! UIPopoverController has a delegate too and it will be sent this message:```objc - (void)popoverControllerDidDismissPopover:(UIPopoverController *)sender;  ```
+* Dismissing a popover from code! UIPopoverController method: ```objc - (void)dismissPopoverAnimated:(BOOL)animated; ```* Finding out that the user dismissed the popover! UIPopoverController has a delegate too and it will be sent this message:```objc - (void)popoverControllerDidDismissPopover:(UIPopoverController *)sender;  ```
 
 
 ##DOCUMENTS + CORE DATA
@@ -1864,13 +1864,13 @@ How to get it? 2 ways:
 * Also sync with completition managers.
 
 ###Creating a UIManagedDocument
-```objcNSFileManager *fileManager = [NSFileManager defaultManager];NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory ￼￼inDomains:NSUserDomainMask]firstObject];
+```objcNSFileManager *fileManager = [NSFileManager defaultManager];NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask]firstObject];
 NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];UIManagedDocument *document = [[UIManagedDocument alloc] initWithFileURL:url];
 ```This creates the UIManagedDocument instance, but does not open nor create the underlying file.
 
 ###open or create a UIManagedDocument* Check to see if the UIManagedDocument’s underlying file exists on disk ...  * if it does, open the document:  * if it does not, create the documentL**CompletionHander**: a block of code to execute when the open/save completes.!That’s needed because the open/save is asynchronous (i.e. happens on its own queue).! Do not ignore this fact!
-￼**Example**```objc
-￼self.document = [[UIManagedDocument alloc] initWithFileURL:(URL *)url];if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {    [document openWithCompletionHandler:^(BOOL success) {        if (success) [self documentIsReady];        if (!success) NSLog(@“couldn’t open document at %@”, url);}]; } else {    [document saveToURL:url forSaveOperation:UIDocumentSaveForCreating      completionHandler:^(BOOL success) {        if (success) [self documentIsReady];        if (!success) NSLog(@“couldn’t create document at %@”, url);    }];}
+**Example**```objc
+self.document = [[UIManagedDocument alloc] initWithFileURL:(URL *)url];if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {    [document openWithCompletionHandler:^(BOOL success) {        if (success) [self documentIsReady];        if (!success) NSLog(@“couldn’t open document at %@”, url);}]; } else {    [document saveToURL:url forSaveOperation:UIDocumentSaveForCreating      completionHandler:^(BOOL success) {        if (success) [self documentIsReady];        if (!success) NSLog(@“couldn’t create document at %@”, url);    }];}
 ```
 *Cant do anything with the document yet(do it in documentIsReady)
 
@@ -1895,7 +1895,7 @@ But you might want to check the documentState when you do Now you can get a man
 ```
 
 ###Multiple instances of UIManagedDocument on the same document* They will not share an NSManagedObjectContext
-* changes in one will not automatically be reflected in the other.* You’ll have to refetch in other UIManagedDocuments after you make a change in one.￼￼￼* Conflicting changes in two different UIManagedDocuments would have to be resolved by you
+* changes in one will not automatically be reflected in the other.* You’ll have to refetch in other UIManagedDocuments after you make a change in one.* Conflicting changes in two different UIManagedDocuments would have to be resolved by you
 * But a single writer and multiple readers? Less rare. But you need to know when to refetch.
 * You can watch (via “radio station”) other documents’ managedObjectContexts (then refetch).
 
@@ -1949,12 +1949,109 @@ Example: setting a "photographer" value on a photo also adds the photo to the "P
 * Implementation of these properties is @dynamic. 
 
 
+###Accessing Entities’ Attributes with dot notationCreate an instance of the Photo Entity in the database
+```objc NSManagedObjectContext *context = document.managedObjectContext; Photo *photo = [NSEntityDescription insertNewObjectForEntityForName:@“Photo”                          inManagedObjectContext:context];// then set the attributes in our Photo using, say, an NSDictionary we got from Flickr ...! e.g. 
+photo.title = [flickrData objectForKey:FLICKR_PHOTO_TITLE];!// the information will automatically be saved (i.e. autosaved) into our document by Core Data// now here’s some other things we could do too ...!NSString *myThumbnail = photo.thumbnailURL; !photo.lastViewedDate = [NSDate date]; !photo.whoTook = ...; // a Photographer object we created or got by querying! photo.whoTook.name = @“CS193p Instructor”; //multiple dots will follow relationships!
+```
 
 
+###Adding code to my NSManagedObject subclass?!It could be a problem if we edited Photo.m or Photographer.m ...Because you might want to modify your schema and re-generate those .h and .m files from Xcode!To get around this, we need to use an Objective-C feature called “categories”.! So let’s take a moment to learn about that ...
+##Categories* Categories are an Objective-C syntax for adding to a class ...! Without subclassing it.Without even having to have access to the code of the class 
+
+Examples:
+* NSAttributedString’s drawAtPoint: method. Added by UIKit (since it’s a UI method) even though NSAttributedString is in Foundation. 
+* NSIndexPath’s row and section properties (used in UITableView-related code). Added by UIKit too, even though NSIndexPath is also in Foundation.!###Syntax
+**Interface:**
+```objc@interface Photo (AddOnName)- (UIImage *)image;@property (readonly) BOOL isOld;@endCategories have their own .h and .m files (usually ClassName+PurposeOfExtension.[mh]).! 
+```
+**Implementation**```objc@implementation Photo (AddOnName)
+- (UIImage *)image // image is not an attribute in the database, but photoURL is{    NSURL *imageURL = [NSURL URLWithString:self.photoURL];    NSData *imageData = [NSData dataWithContentsOfURL:imageURL];    return [UIImage imageWithData:imageData];}- (BOOL)isOld // whether this Photo was uploaded more than a day ago {    return [self.uploadDate timeIntervalSinceNow] > -24*60*60;}@end
+```
+Other examples ... sometimes we add @propertys to an NSManagedObject subclass via categories to make accessing BOOL attributes (which are NSNumbers) more cleanly.Or we add @propertys to convert NSData to whatever the bits represent.*Any class can have a category added to it, but don’t overuse/abuse this mechanism.***Asd**
+
+###Common category:Creation
+```objc @implementation Photo (Create) + (Photo *)photoWithFlickrData:(NSDictionary *)flickrData{inManagedObjectContext:(NSManagedObjectContext *)contextPhoto *photo = ...; // see if a Photo for that Flickr data is already in the databaseif (!photo) {    photo = [NSEntityDescription insertNewObjectForEntityForName:@“Photo”                                          inManagedObjectContext:context];// initialize the photo from the Flickr data// perhaps even create other database objects (like the Photographer)}    return photo;}
+@end
+```
+**Categories cannot have instance variables**
 
 
+###DeletionDeleting objects from the database is easy (sometimes too easy!)
+```objc [aDocument.managedObjectContext deleteObject:photo]; ```
+* Make sure that the rest of your objects in the database are in a sensible state after this. 
+* Relationships will be updated for you (if you set Delete Rule for relationship attributes properly).
+* Don’t keep any strong pointers to photo after you delete it
 
+```objcprepareForDeletion !This is another method we sometimes put in a category of an NSManagedObject subclass ...!  @implementation Photo (Deletion)  - (void)prepareForDeletion  {// we don’t need to set our whoTook to nil or anything here (that will happen automatically)!// but if Photographer had, for example, a “number of photos taken” attribute,!// we might adjust it down by one here (e.g. self.whoTook.photoCount--). }@end
+```
+###Querying
+* You need to be able to retrieve objects from the database, not just create new ones
+* You do this by executing an NSFetchRequest in your NSManagedObjectContext!
+* Four important things involved in creating an NSFetchRequest
+1. Entity to fetch (required)
+2. How many objects to fetch at a time and/or maximum to fetch (optional, default: all)3. NSSortDescriptors to specify the order in which the array of fetched objects are returned 
+4. NSPredicate specifying which of those Entities to fetch (optional, default is all of them)
 
+**Creating an NSFetchRequest**
+We’ll consider each of these lines of code one by one
+```objc 
+ NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@“Photo”]; request.fetchBatchSize = 20; request.fetchLimit = 100; request.sortDescriptors = @[sortDescriptor]; request.predicate = ...;
+ ```
+ * A given fetch returns objects all of the same Entity.!
+ * You can’t have a fetch that returns some Photos and some Photographers
+ * Setting fetch sizes/limits: If you created a fetch that would match 1000 objects, the request above faults 20 at a time. And it would stop fetching after it had fetched 100 of the 1000.
+
+####NSSortDescriptor* When we execute a fetch request, it’s going to return an NSArray of NSManagedObjects. 
+* NSArrays are “ordered,” so we should specify the order when we fetch.
+* We do that by giving the fetch request a list of “sort descriptors” that describe what to sort by. ```objc 
+  NSSortDescriptor *sortDescriptor =      [NSSortDescriptor sortDescriptorWithKey:@“title”                                    ascending:YES                                     selector:@selector(localizedStandardCompare:)];
+```
+* The selector: argument is just a method sent to each object to compare it to others. 
+* Some of these “methods” might be smart (i.e. they can happen on the database side).
+* localizedStandardCompare: is for ordering strings like the Finder on the Mac does (very common)
+* We give an array of these NSSortDescriptors to the NSFetchRequest because sometimes we want to sort first by one key (e.g. last name), then, within that sort, by another (e.g. first name).!**Examples: **
+@[sortDescriptor] or @[lastNameSortDescriptor, firstNameSortDescriptor]
+
+###Querying: NSPredicate* This is the guts of how we specify exactly which objects we want from the database.!
+* Predicate formats: Creating one looks a lot like creating an NSString, but the contents have semantic meaning.
+  ```objc NSString *serverName = @“flickr-5”;  NSPredicate *predicate =      [NSPredicate predicateWithFormat:@“thumbnailURL contains %@”, serverName];
+      ```**Examples**
+```objc @“uniqueId = %@”, [flickrInfo objectForKey:@“id”] // unique a photo in the database @“name contains[c] %@”, (NSString *) // matches name case insensitively!@“viewed > %@”, (NSDate *) // viewed is a Date attribute in the data mapping! @“whoTook.name = %@”, (NSString *) // Photo search (by photographer’s name)!@“any photos.title contains %@”, (NSString *) // Photographer search (not a Photo search)! Many more options. Look at the class documentation for NSPredicate.```
+
+###NSCompoundPredicate You can use AND and OR inside a predicate string, e.g. @“(name = %@) OR (title = %@)”! Or you can combine NSPredicate objects with special NSCompoundPredicates.```objc 
+NSArray *array = @[predicate1, predicate2];NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:array]; ```
+
+This predicate is “predicate1 AND predicate2”. Or available too, of course.
+
+####Advanced Querying:  Key Value Coding
+
+* Can actually do predicates like @“photos.@count > 5” (Photographers with more than 5 photos).
+* @count is a function (there are others) executed in the database itself.! 
+* **all this stuff (and more) works on dictionaries, arrays and sets too**
+  * e.g. [propertyListResults valueForKeyPath:@“photos.photo.@avg.latitude”] on Flickr results!
+* returns the average latitude of all of the photos in the results (yes, really)!
+  * e.g. @“photos.photo.title.length" would return an array of the lengths of the titles of the photos!####NSExpressionNo time to cover it now, unfortunately.!If interested, for both NSExpression and Key Value Coding queries, investigate ...!```objc 
+NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@“...”]; ![request setResultType:NSDictionaryResultType]; // fetch returns array of dicts instead of NSMO’s! [request setPropertiesToFetch:@[@“name”, expression, etc.]];```
+
+###Querying
+Let’s say we want to query for all Photographers ...!```objc NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@“Photographer”];//who have taken a photo in the last 24 hours ...!NSDate *yesterday = [NSDate dateWithTimeIntervalSinceNow:-24*60*60]; !
+request.predicate = [NSPredicate predicateWithFormat:@“any photos.uploadDate > %@”, yesterday]; 
+//sorted by the Photographer’s name request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@“name” ascending:YES]];```
+**Executing the fetch**
+```objc NSManagedObjectContext *context = aDocument.managedObjectContext; NSError *error; NSArray *photographers = [context executeFetchRequest:request error:&error]; ```
+* Returns nil if there is an error (check the NSError for details).!
+* Returns an empty array (not nil) if there are no matches in the database.!
+* Returns an NSArray of NSManagedObjects (or subclasses thereof) if there were any matches.! 
+* You can pass NULL for error: if you don’t care why it fails.!
+###Faulting
+* The above fetch does not necessarily fetch any actual data.* It could be an array of “as yet unfaulted” objects, waiting for you to access their attributes.! * Core Data is very smart about “faulting” the data in as it is actually accessed.!** For example**
+```objc for (Photographer *photographer in photographers) {    NSLog(@“fetched photographer %@”, photographer);} ```
+* You may or may not see the names of the photographers in the output (you might just see “unfaulted object”, depending on whether it prefetched them)** But if you did this**for (Photographer *photographer in photographers) {    NSLog(@“fetched photographer named %@”, photographer.name);}* then you would definitely fault all the Photographers in from the database. Because in the second case, you actually access the NSManagedObject’s data.
+####Core Data Thread Safety* NSManagedObjectContext is not thread safe.* Luckily, Core Data access is usually very fast, so multithreading is only rarely needed.* Usually we create NSManagedObjectContext using a queue-based concurrency model.* This means that you can only touch a context and its NSMO’s in the queue it was created on.**Thread-Safe Access to an NSManagedObjectContext**```objc [context performBlock:^{ // or performBlockAndWait:!// do stuff with context in its safe queue (the queue it was created on)!}]; ```
+* Note that the Q might well be the main Q, so you’re not necessarily getting “multithreaded.”!####Parent Context (advanced)* Some contexts (including UIManagedDocument ones) have a parentContext (a @property on NSMOC).! 
+* This parentContext will almost always be on a separate queue, but access the same database.
+* This means you can performBlock: on it to access the database off the main queue (e.g.).!* But it is still a different context, so you’ll have to refetch in the child context to see any changes.####OTHER TOPICS* Optimistic locking (deleteConflictsForObject:)* Rolling back unsaved changes
+* Undo/Redo* Staleness (how long after a fetch until a refetch of an object is required?)
 
 ```objc 
 /Users/sbastidasr/Pictures/Photo Booth Library/Pictures/Photo on 9-30-14 at 11.16 AM.jpg
